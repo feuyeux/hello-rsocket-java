@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SmartFoxWorkToolsProjectState">
+    <option name="branch" value="master" />
+    <option name="gitUrl" value="git@github.com:feuyeux/hello-rsocket.git" />
+    <option name="localBranch" value="master" />
+    <option name="revision" value="e768544f3a9152a2a690a3791ba2af9b33a8b232" />
+  </component>
+</project>
