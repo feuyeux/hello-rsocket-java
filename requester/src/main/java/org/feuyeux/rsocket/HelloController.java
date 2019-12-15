@@ -1,4 +1,4 @@
-package org.feuyeux.rsocket.cli;
+package org.feuyeux.rsocket;
 
 import java.time.Duration;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import lombok.extern.slf4j.Slf4j;
-import org.feuyeux.rsocket.cli.pojo.HelloRequest;
-import org.feuyeux.rsocket.cli.pojo.HelloResponse;
+import org.feuyeux.rsocket.pojo.HelloRequest;
+import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
 import org.springframework.util.MimeType;

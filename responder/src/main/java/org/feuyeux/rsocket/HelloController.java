@@ -1,4 +1,4 @@
-package org.feuyeux.rsocket.cli;
+package org.feuyeux.rsocket;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -6,9 +6,9 @@ import java.util.List;
 
 import io.rsocket.Payload;
 import lombok.extern.slf4j.Slf4j;
-import org.feuyeux.rsocket.cli.pojo.HelloRequest;
-import org.feuyeux.rsocket.cli.pojo.HelloRequests;
-import org.feuyeux.rsocket.cli.pojo.HelloResponse;
+import org.feuyeux.rsocket.pojo.HelloRequest;
+import org.feuyeux.rsocket.pojo.HelloRequests;
+import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;

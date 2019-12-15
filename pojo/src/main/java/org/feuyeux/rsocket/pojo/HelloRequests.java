@@ -1,4 +1,4 @@
-package org.feuyeux.rsocket.cli.pojo;
+package org.feuyeux.rsocket.pojo;
 
 import java.util.List;
 

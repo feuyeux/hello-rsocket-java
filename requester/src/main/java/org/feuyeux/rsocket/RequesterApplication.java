@@ -1,4 +1,4 @@
-package org.feuyeux.rsocket.cli;
+package org.feuyeux.rsocket;
 
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import lombok.extern.slf4j.Slf4j;

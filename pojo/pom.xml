@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.feuyeux.rsocket.cli</groupId>
+    <groupId>org.feuyeux.rsocket</groupId>
     <artifactId>pojo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -16,14 +16,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://github.com/feuyeux/buaa-lectures/tree/master/async -->
+        <!-- https://github.com/feuyeux/buaa-lectures/tree/master/async
         <dependency>
             <groupId>org.feuyeux.async</groupId>
             <artifactId>async-library</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-
+        -->
         <!-- https://github.com/alibaba/fastjson-->
         <dependency>
             <groupId>com.alibaba</groupId>

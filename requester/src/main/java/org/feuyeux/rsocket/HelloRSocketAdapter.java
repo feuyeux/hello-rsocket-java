@@ -1,11 +1,11 @@
-package org.feuyeux.rsocket.cli;
+package org.feuyeux.rsocket;
 
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import org.feuyeux.rsocket.cli.pojo.HelloRequest;
-import org.feuyeux.rsocket.cli.pojo.HelloRequests;
-import org.feuyeux.rsocket.cli.pojo.HelloResponse;
+import org.feuyeux.rsocket.pojo.HelloRequest;
+import org.feuyeux.rsocket.pojo.HelloRequests;
+import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
