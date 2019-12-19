@@ -1,7 +1,8 @@
 package org.feuyeux.rsocket.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -9,17 +10,9 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class HelloResponse {
-
     private String id;
-
-    private String name;
-
-    public HelloResponse() {
-    }
-
-    public HelloResponse(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private String value;
 }

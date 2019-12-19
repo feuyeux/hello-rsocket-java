@@ -1,9 +1,5 @@
 package org.feuyeux.rsocket;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-
 import io.rsocket.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
@@ -14,6 +10,11 @@ import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author feuyeux@gmail.com
@@ -32,7 +33,7 @@ public class HelloController {
 
     @ConnectMapping("hello-metadata")
     public Mono<Void> metadataPush(Payload payload) {
-        log.info("{}", payload);
+        log.info(">> [MetadataPush] {}", payload);
         return Mono.empty();
     }
 
@@ -45,7 +46,7 @@ public class HelloController {
      */
     @MessageMapping("hello-forget")
     public Mono<Void> fireAndForget(HelloRequest helloRequest) {
-        log.info("Received 'fire-and-forget' request with payload:{}", helloRequest.getId());
+        log.info(">> [FireAndForget] FNF: {}", helloRequest.getId());
         return Mono.empty();
     }
 
@@ -58,7 +59,7 @@ public class HelloController {
      */
     @MessageMapping("hello")
     Mono<HelloResponse> requestAndResponse(HelloRequest helloRequest) {
-        log.info("Received 'request response' request with payload:{}", helloRequest);
+        log.info(" >> [Request-Response] data: {}", helloRequest);
         String id = helloRequest.getId();
         return Mono.just(getHello(id));
     }
@@ -72,11 +73,11 @@ public class HelloController {
      */
     @MessageMapping("hello-stream")
     Flux<HelloResponse> requestStream(HelloRequests helloRequests) {
-        log.info("getCustomers multipleCustomersRequest={}", helloRequests);
+        log.info(">> [Request-Stream] data: {}", helloRequests);
         List<String> ids = helloRequests.getIds();
         return Flux.fromIterable(ids)
-            .delayElements(Duration.ofMillis(500))
-            .map(id -> getHello(id));
+                .delayElements(Duration.ofMillis(500))
+                .map(this::getHello);
     }
 
     /**
@@ -87,19 +88,18 @@ public class HelloController {
      * @return
      */
     @MessageMapping("hello-channel")
-    Flux<HelloResponse> requestChannel(Flux<HelloRequest> requests) {
+    Flux<List<HelloResponse>> requestChannel(Flux<HelloRequests> requests) {
         return Flux.from(requests)
-            .doOnNext(message -> log.info("Received 'request stream' request with payload:{}", message))
-            .map(message -> {
-                String id = message.getId();
-                return getHello(id);
-            });
+                .doOnNext(message -> log.info(">> [Request-Channel] data:{}", message))
+                .map(message -> message.getIds().stream()
+                        .map(this::getHello)
+                        .collect(Collectors.toList()));
     }
 
     private HelloResponse getHello(String id) {
         int index;
         try {
-            index = Integer.valueOf(id);
+            index = Integer.parseInt(id);
         } catch (NumberFormatException ignored) {
             index = 0;
         }

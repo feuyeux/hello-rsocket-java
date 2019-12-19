@@ -2,22 +2,15 @@ package org.feuyeux.rsocket.pojo;
 
 import java.util.List;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * @author feuyeux@gmail.com
  */
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class HelloRequests {
     private List<String> ids;
-
-    public HelloRequests() {
-    }
-
-    public HelloRequests(List<String> ids) {
-        this.ids = ids;
-    }
 }

@@ -1,21 +1,14 @@
 package org.feuyeux.rsocket.pojo;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * @author feuyeux@gmail.com
  */
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class HelloRequest {
     private String id;
-
-    public HelloRequest() {
-    }
-
-    public HelloRequest(String id) {
-        this.id = id;
-    }
 }

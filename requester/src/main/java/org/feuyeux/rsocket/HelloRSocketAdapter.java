@@ -1,16 +1,17 @@
 package org.feuyeux.rsocket;
 
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * @author feuyeux@gmail.com
@@ -47,9 +48,9 @@ public class HelloRSocketAdapter {
      */
     public Mono<Void> fireAndForget(String id) {
         return rSocketRequester
-            .route("hello-forget")
-            .data(new HelloRequest(id))
-            .send();
+                .route("hello-forget")
+                .data(new HelloRequest(id))
+                .send();
     }
 
     /**
@@ -61,12 +62,11 @@ public class HelloRSocketAdapter {
      */
     public Mono<HelloResponse> getHello(String id) {
         return rSocketRequester
-            .route("hello")
-            .data(new HelloRequest(id))
-            .retrieveMono(HelloResponse.class)
-            .doOnNext(HelloResponse -> {
-                log.info("Received hello as mono [{}]", HelloResponse);
-            });
+                .route("hello")
+                .data(new HelloRequest(id))
+                .retrieveMono(HelloResponse.class)
+                .doOnNext(response -> log.info("<< [Request-Response] response id:{},value:{}",
+                        response.getId(), response.getValue()));
     }
 
     /**
@@ -78,12 +78,11 @@ public class HelloRSocketAdapter {
      */
     public Flux<HelloResponse> getHellos(List<String> ids) {
         return rSocketRequester
-            .route("hello-stream")
-            .data(new HelloRequests(ids))
-            .retrieveFlux(HelloResponse.class)
-            .doOnNext(HelloResponse -> {
-                log.info("Received hello as flux [{}]", HelloResponse);
-            });
+                .route("hello-stream")
+                .data(new HelloRequests(ids))
+                .retrieveFlux(HelloResponse.class)
+                .doOnNext(response -> log.info("<< [Request-Stream] response id:{},value:{}",
+                        response.getId(), response.getValue()));
     }
 
     /**
@@ -93,14 +92,16 @@ public class HelloRSocketAdapter {
      * @param helloRequestFlux
      * @return
      */
-    public Flux<HelloResponse> getHelloChannel(Flux<HelloRequest> helloRequestFlux) {
+    public Flux<List<HelloResponse>> getHelloChannel(Flux<HelloRequests> helloRequestFlux) {
         return rSocketRequester
-            .route("hello-channel")
-            .data(helloRequestFlux, HelloRequest.class)
-            .retrieveFlux(HelloResponse.class)
-            .doOnNext(HelloResponse -> {
-                    log.info("Received hello as flux [{}]", HelloResponse);
-                }
-            );
+                .route("hello-channel")
+                .data(helloRequestFlux, HelloRequest.class)
+                .retrieveFlux(new ParameterizedTypeReference<List<HelloResponse>>() {
+                })
+                .doOnNext(responses -> responses.forEach(
+                        response -> log.info("<< [Request-Channel] response id:{},value:{}",
+                                response.getId(), response.getValue()
+                        )
+                ));
     }
 }

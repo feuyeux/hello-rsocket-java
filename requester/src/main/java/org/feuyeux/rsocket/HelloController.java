@@ -1,12 +1,8 @@
 package org.feuyeux.rsocket;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.IntStream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
+import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
@@ -16,6 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -41,7 +42,7 @@ public class HelloController {
 
     @GetMapping("hello-forget")
     Mono<Void> fireAndForget() {
-        return helloRSocketAdapter.fireAndForget("1024");
+        return helloRSocketAdapter.fireAndForget("JAVA");
     }
 
     @GetMapping("/hello/{id}")
@@ -57,20 +58,22 @@ public class HelloController {
     }
 
     @GetMapping(value = "/hello-channel", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    Publisher<HelloResponse> getHelloChannel() {
-        Flux<HelloRequest> map = Flux.interval(Duration.ofMillis(1000))
-            .map(id -> new HelloRequest(getRandomId(5)));
+    Publisher<List<HelloResponse>> getHelloChannel() {
+        Flux<HelloRequests> map = Flux.just(
+                new HelloRequests(getRandomIds(3)),
+                new HelloRequests(getRandomIds(3)),
+                new HelloRequests(getRandomIds(3)));
         return helloRSocketAdapter.getHelloChannel(map);
     }
 
     private List<String> getRandomIds(int max) {
         return IntStream.range(0, max)
-            .mapToObj(i -> getRandomId(max))
-            .collect(toList());
+                .mapToObj(i -> getRandomId())
+                .collect(toList());
     }
 
-    private String getRandomId(int max) {
-        int i = random.nextInt(max);
+    private String getRandomId() {
+        int i = random.nextInt(5);
         return String.valueOf(i);
     }
 }
