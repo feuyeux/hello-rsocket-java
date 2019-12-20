@@ -1,6 +1,8 @@
 ### Intellij ###
 .idea/
 *.iml
+*.ipr
+*.iws
 
 # Gradle
 .idea/**/gradle.xml
@@ -29,9 +31,6 @@ hs_err_pid*
 gradle-app.setting
 
 .DS_Store
-*.iml
-*.ipr
-*.iws
 
 .vscode
 .project
@@ -40,3 +39,8 @@ go.sum
 
 Cargo.lock
 target/
+*/.factorypath
+*/.classpath
+*/.settings/
+/.settings/
+/.classpath

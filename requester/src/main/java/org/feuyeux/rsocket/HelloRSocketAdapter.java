@@ -28,9 +28,9 @@ public class HelloRSocketAdapter {
     /**
      * TODO METADATA_PUSH
      *
-     * @param securityToken
-     * @param mimeType
-     * @return
+     * @param securityToken todo
+     * @param mimeType todo
+     * @return void
      */
     public Mono<Void> metaData(String securityToken, MimeType mimeType) {
         //return rSocketRequester
@@ -43,8 +43,8 @@ public class HelloRSocketAdapter {
      * REQUEST_FNF
      * -->!
      *
-     * @param id
-     * @return
+     * @param id hello id
+     * @return void
      */
     public Mono<Void> fireAndForget(String id) {
         return rSocketRequester
@@ -57,8 +57,8 @@ public class HelloRSocketAdapter {
      * REQUEST_RESPONSE
      * request --> <-- response
      *
-     * @param id
-     * @return
+     * @param id hello id
+     * @return hello response
      */
     public Mono<HelloResponse> getHello(String id) {
         return rSocketRequester
@@ -73,8 +73,8 @@ public class HelloRSocketAdapter {
      * REQUEST_STREAM
      * request --> <-- <-- stream
      *
-     * @param ids
-     * @return
+     * @param ids hello id[]
+     * @return hello response flux
      */
     public Flux<HelloResponse> getHellos(List<String> ids) {
         return rSocketRequester
@@ -89,8 +89,8 @@ public class HelloRSocketAdapter {
      * REQUEST_CHANNEL
      * request channel --> --> <-- --> <--
      *
-     * @param helloRequestFlux
-     * @return
+     * @param helloRequestFlux hello request flux
+     * @return hello response flux
      */
     public Flux<List<HelloResponse>> getHelloChannel(Flux<HelloRequests> helloRequestFlux) {
         return rSocketRequester

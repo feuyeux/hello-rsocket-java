@@ -28,7 +28,7 @@ public class HelloController {
     /**
      * TODO METADATA_PUSH
      *
-     * @return
+     * @return void
      */
 
     @ConnectMapping("hello-metadata")
@@ -41,8 +41,8 @@ public class HelloController {
      * REQUEST_FNF
      * -->!
      *
-     * @param helloRequest
-     * @return
+     * @param helloRequest fnf
+     * @return void
      */
     @MessageMapping("hello-forget")
     public Mono<Void> fireAndForget(HelloRequest helloRequest) {
@@ -54,8 +54,8 @@ public class HelloController {
      * REQUEST_RESPONSE
      * request --> <-- response
      *
-     * @param helloRequest
-     * @return
+     * @param helloRequest hello request
+     * @return hello response
      */
     @MessageMapping("hello")
     Mono<HelloResponse> requestAndResponse(HelloRequest helloRequest) {
@@ -68,8 +68,8 @@ public class HelloController {
      * REQUEST_STREAM
      * request --> <-- <-- stream
      *
-     * @param helloRequests
-     * @return
+     * @param helloRequests hello requests
+     * @return hello response flux
      */
     @MessageMapping("hello-stream")
     Flux<HelloResponse> requestStream(HelloRequests helloRequests) {
@@ -84,8 +84,8 @@ public class HelloController {
      * REQUEST_CHANNEL
      * request channel --> --> <-- --> <--
      *
-     * @param requests
-     * @return
+     * @param requests hello request flux
+     * @return hello response flux
      */
     @MessageMapping("hello-channel")
     Flux<List<HelloResponse>> requestChannel(Flux<HelloRequests> requests) {

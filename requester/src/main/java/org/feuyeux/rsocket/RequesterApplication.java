@@ -22,9 +22,9 @@ public class RequesterApplication {
     @Bean
     public RSocketRequester rSocketRequester(RSocketStrategies strategies) {
         return RSocketRequester.builder()
-            .rsocketStrategies(strategies)
-            .connect(TcpClientTransport.create(7000))
-            .block();
+                .rsocketStrategies(strategies)
+                .connect(TcpClientTransport.create(7000))
+                .block();
     }
 }
 

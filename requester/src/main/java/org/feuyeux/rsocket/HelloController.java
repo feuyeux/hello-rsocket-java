@@ -1,7 +1,6 @@
 package org.feuyeux.rsocket;
 
 import lombok.extern.slf4j.Slf4j;
-import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.reactivestreams.Publisher;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -27,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 @RestController
 public class HelloController {
     private final HelloRSocketAdapter helloRSocketAdapter;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     HelloController(HelloRSocketAdapter helloRSocketAdapter) {
         this.helloRSocketAdapter = helloRSocketAdapter;
