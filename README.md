@@ -1,6 +1,6 @@
 ## hello-rsocket-java
-
 ![](https://github.com/feuyeux/hello-rsocket/blob/master/doc/hello-rsocket.png)
+
 ### BUILD&START
 #### pojo
 ```bash
@@ -21,6 +21,9 @@
 ```
 
 ### TEST
+
+#### FireAndForget
+
 cli
 ```bash
 curl http://localhost:8080/hello-forget
@@ -31,7 +34,10 @@ responder
 >> [FireAndForget] FNF: JAVA
 ```
 
+#### Request-Response
+
 cli
+
 ```bash
 ▶ curl http://localhost:8080/hello/1
 {"id":"1","value":"Bonjour"}
@@ -47,8 +53,10 @@ requester
  << [Request-Response] response id:1,value:Bonjour
 ```
 
+#### Request-Stream
 
 cli
+
 ```bash
 curl http://localhost:8080/hello-stream
 data:{"id":"3","value":"こんにちは"}
@@ -76,7 +84,10 @@ requester
 << [Request-Stream] response id:3,value:こんにちは
 ```
 
+#### Request-Channel
+
 cli
+
 ```bash
 ▶ curl http://localhost:8080/hello-channel
 data:[{"id":"4","value":"Ciao"},{"id":"4","value":"Ciao"},{"id":"2","value":"Hola"}]
