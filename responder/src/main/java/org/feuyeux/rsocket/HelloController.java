@@ -33,7 +33,7 @@ public class HelloController {
 
     @ConnectMapping("hello-metadata")
     public Mono<Void> metadataPush(Payload payload) {
-        log.info(">> [MetadataPush] {}", payload);
+        log.info(">> [MetadataPush]:{}", payload);
         return Mono.empty();
     }
 
@@ -46,7 +46,7 @@ public class HelloController {
      */
     @MessageMapping("hello-forget")
     public Mono<Void> fireAndForget(HelloRequest helloRequest) {
-        log.info(">> [FireAndForget] FNF: {}", helloRequest.getId());
+        log.info(">> [FireAndForget] FNF:{}", helloRequest.getId());
         return Mono.empty();
     }
 
@@ -59,7 +59,7 @@ public class HelloController {
      */
     @MessageMapping("hello-response")
     Mono<HelloResponse> requestAndResponse(HelloRequest helloRequest) {
-        log.info(" >> [Request-Response] data: {}", helloRequest);
+        log.info(" >> [Request-Response] data:{}", helloRequest);
         String id = helloRequest.getId();
         return Mono.just(getHello(id));
     }
@@ -73,7 +73,7 @@ public class HelloController {
      */
     @MessageMapping("hello-stream")
     Flux<HelloResponse> requestStream(HelloRequests helloRequests) {
-        log.info(">> [Request-Stream] data: {}", helloRequests);
+        log.info(">> [Request-Stream] data:{}", helloRequests);
         List<String> ids = helloRequests.getIds();
         return Flux.fromIterable(ids)
                 .delayElements(Duration.ofMillis(500))

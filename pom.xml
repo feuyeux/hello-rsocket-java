@@ -13,5 +13,6 @@
         <module>pojo</module>
         <module>responder</module>
         <module>requester</module>
+        <module>ultimate</module>
     </modules>
 </project>
