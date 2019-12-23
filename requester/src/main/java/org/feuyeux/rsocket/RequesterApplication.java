@@ -34,6 +34,7 @@ public class RequesterApplication {
                 .metadataMimeType(metadataMimeTypeValue)
                 .dataMimeType(dataMimeTypeValue)
                 .frameDecoder(PayloadDecoder.ZERO_COPY)
+                .fragment(1024)
                 .transport(TcpClientTransport.create(7878))
                 .start().block();
     }

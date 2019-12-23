@@ -62,7 +62,7 @@ public class HelloRSocketAdapter {
      */
     public Mono<HelloResponse> getHello(String id) {
         return rSocketRequester
-                .route("hello")
+                .route("hello-response")
                 .data(new HelloRequest(id))
                 .retrieveMono(HelloResponse.class)
                 .doOnNext(response -> log.info("<< [Request-Response] response id:{},value:{}",

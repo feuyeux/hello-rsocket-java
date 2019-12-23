@@ -57,7 +57,7 @@ public class HelloController {
      * @param helloRequest hello request
      * @return hello response
      */
-    @MessageMapping("hello")
+    @MessageMapping("hello-response")
     Mono<HelloResponse> requestAndResponse(HelloRequest helloRequest) {
         log.info(" >> [Request-Response] data: {}", helloRequest);
         String id = helloRequest.getId();
