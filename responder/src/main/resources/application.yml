@@ -1,4 +1,5 @@
 spring:
   rsocket:
     server:
-      port: 7000
+      port: 7878
+      transport: tcp

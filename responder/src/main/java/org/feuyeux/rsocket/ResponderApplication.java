@@ -13,5 +13,8 @@ public class ResponderApplication {
     public static void main(String[] args) {
         SpringApplication.run(ResponderApplication.class);
     }
+
+    //RSocketServerAutoConfiguration
+
 }
 
