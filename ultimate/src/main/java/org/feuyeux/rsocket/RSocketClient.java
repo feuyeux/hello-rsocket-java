@@ -17,7 +17,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -63,11 +62,16 @@ public class RSocketClient {
         HelloRequest helloRequest = new HelloRequest("1");
         Payload payload = DefaultPayload.create(JSON.toJSONString(helloRequest));
         CountDownLatch c = new CountDownLatch(1);
-        socket.requestResponse(payload).subscribe(p -> {
-            HelloResponse response = JSON.parseObject(p.getDataUtf8(), HelloResponse.class);
-            log.info("<< [Request-Response] response id:{},value:{}", response.getId(), response.getValue());
-            c.countDown();
-        });
+        socket.requestResponse(payload)
+                .doOnError(e -> {
+                    log.error("", e);
+                    c.countDown();
+                })
+                .subscribe(p -> {
+                    HelloResponse response = JSON.parseObject(p.getDataUtf8(), HelloResponse.class);
+                    log.info("<< [Request-Response] response id:{},value:{}", response.getId(), response.getValue());
+                    c.countDown();
+                });
         c.await();
     }
 
