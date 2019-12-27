@@ -21,6 +21,12 @@ import java.util.List;
 @Slf4j
 public class HelloRSocket extends AbstractRSocket {
 
+    private final List<String> HELLO_LIST = Arrays.asList("Hello", "Bonjour", "Hola", "こんにちは", "Ciao", "안녕하세요");
+
+    private static Publisher<String> apply(List<String> list) {
+        return Flux.fromIterable(list);
+    }
+
     @Override
     public Mono<Void> metadataPush(Payload payload) {
         String metadata = payload.getMetadataUtf8();
@@ -77,10 +83,6 @@ public class HelloRSocket extends AbstractRSocket {
                 .subscribeOn(scheduler);
     }
 
-    private static Publisher<String> apply(List<String> list) {
-        return Flux.fromIterable(list);
-    }
-
     private HelloResponse getHello(String id) {
         int index;
         try {
@@ -97,6 +99,4 @@ public class HelloRSocket extends AbstractRSocket {
     private HelloResponse getHello(int index) {
         return new HelloResponse(String.valueOf(index), HELLO_LIST.get(index));
     }
-
-    private final List<String> HELLO_LIST = Arrays.asList("Hello", "Bonjour", "Hola", "こんにちは", "Ciao", "안녕하세요");
 }

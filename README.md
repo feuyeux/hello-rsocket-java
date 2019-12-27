@@ -2,9 +2,9 @@
 ![](https://github.com/feuyeux/hello-rsocket/blob/master/doc/hello-rsocket.png)
 
 ### BUILD&START
-#### pojo
+#### common
 ```bash
-▶ cd pojo
+▶ cd common
 ▶ mvn clean install
 ```
 

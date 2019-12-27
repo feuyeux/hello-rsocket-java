@@ -29,7 +29,7 @@ public class HelloRSocketAdapter {
      * TODO METADATA_PUSH
      *
      * @param securityToken todo
-     * @param mimeType todo
+     * @param mimeType      todo
      * @return void
      */
     public Mono<Void> metaData(String securityToken, MimeType mimeType) {
@@ -97,7 +97,7 @@ public class HelloRSocketAdapter {
                 .route("hello-channel")
                 .data(helloRequestFlux, HelloRequest.class)
                 .retrieveFlux(new ParameterizedTypeReference<List<HelloResponse>>() {
-                })
+                }).limitRequest(2)
                 .doOnNext(responses -> responses.forEach(
                         response -> log.info("<< [Request-Channel] response id:{},value:{}",
                                 response.getId(), response.getValue()

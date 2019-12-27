@@ -19,10 +19,10 @@ import org.springframework.util.MimeTypeUtils;
 @Slf4j
 @SpringBootApplication
 public class RequesterApplication {
-    String dataMimeTypeValue = MimeTypeUtils.APPLICATION_JSON_VALUE;
-    MimeType dataMimeType = MimeTypeUtils.APPLICATION_JSON;
-    String metadataMimeTypeValue = "message/x.rsocket.composite-metadata.v0";
-    MimeType metadataMimeType = MimeTypeUtils.parseMimeType(metadataMimeTypeValue);
+    final String dataMimeTypeValue = MimeTypeUtils.APPLICATION_JSON_VALUE;
+    final MimeType dataMimeType = MimeTypeUtils.APPLICATION_JSON;
+    final String metadataMimeTypeValue = "message/x.rsocket.composite-metadata.v0";
+    final MimeType metadataMimeType = MimeTypeUtils.parseMimeType(metadataMimeTypeValue);
 
     public static void main(String[] args) {
         SpringApplication.run(RequesterApplication.class);

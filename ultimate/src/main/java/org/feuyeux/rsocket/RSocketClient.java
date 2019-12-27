@@ -11,15 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
+import org.feuyeux.rsocket.utils.HelloUtils;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 public class RSocketClient {
@@ -77,7 +75,7 @@ public class RSocketClient {
 
     public static void execRequestStream(RSocket socket) throws InterruptedException {
         log.info("====ExecRequestStream====");
-        List<String> ids = getRandomIds(5);
+        List<String> ids = HelloUtils.getRandomIds(5);
         Payload payload = DefaultPayload.create(JSON.toJSONString(new HelloRequests(ids)));
         CountDownLatch c = new CountDownLatch(5);
         socket.requestStream(payload).subscribe(p -> {
@@ -94,7 +92,7 @@ public class RSocketClient {
 
         Flux<Payload> send = Flux.<Payload>create(emitter -> {
             for (int i = 1; i <= 3; i++) {
-                List<String> ids = getRandomIds(3);
+                List<String> ids = HelloUtils.getRandomIds(3);
                 Payload payload = DefaultPayload.create(JSON.toJSONString(new HelloRequests(ids)));
                 emitter.next(payload);
             }
@@ -107,16 +105,5 @@ public class RSocketClient {
             c.countDown();
         });
         c.await();
-    }
-
-    private static List<String> getRandomIds(int max) {
-        return IntStream.range(0, max)
-                .mapToObj(i -> getRandomId())
-                .collect(toList());
-    }
-
-    private static String getRandomId() {
-        int i = random.nextInt(5);
-        return String.valueOf(i);
     }
 }
