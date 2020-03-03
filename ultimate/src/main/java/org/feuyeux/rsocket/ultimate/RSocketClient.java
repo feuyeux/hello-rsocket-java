@@ -1,9 +1,10 @@
-package org.feuyeux.rsocket;
+package org.feuyeux.rsocket.ultimate;
 
 import com.alibaba.fastjson.JSON;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.RSocketFactory;
+import io.rsocket.exceptions.RejectedResumeException;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.transport.netty.client.WebsocketClientTransport;
 import io.rsocket.util.DefaultPayload;
@@ -26,13 +27,7 @@ public class RSocketClient {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws InterruptedException {
-        TcpClientTransport tcpTransport = TcpClientTransport.create(HOST, PORT);
-        WebsocketClientTransport wsTransport = WebsocketClientTransport.create(HOST, PORT);
-
-        RSocket socket = RSocketFactory.connect()
-                .transport(tcpTransport)
-                .start()
-                .block();
+        RSocket socket = init();
         if (socket != null) {
             execMetaPush(socket);
             execFireAndForget(socket);
@@ -40,6 +35,23 @@ public class RSocketClient {
             execRequestStream(socket);
             execRequestChannel(socket);
         }
+    }
+
+    private static RSocket init() {
+        TcpClientTransport tcpTransport = TcpClientTransport.create(HOST, PORT);
+        WebsocketClientTransport wsTransport = WebsocketClientTransport.create(HOST, PORT);
+
+        return RSocketFactory.connect()
+                .errorConsumer(throwable -> {
+                    if (throwable instanceof RejectedResumeException) {
+                        init();
+                    }
+                })
+                .resume()
+                .resumeSessionDuration(Duration.ofSeconds(60))
+                .transport(tcpTransport)
+                .start()
+                .block();
     }
 
     public static void execMetaPush(RSocket socket) {
@@ -88,10 +100,11 @@ public class RSocketClient {
 
     public static void execRequestChannel(RSocket socket) throws InterruptedException {
         log.info("====ExecRequestChannel====");
-        CountDownLatch c = new CountDownLatch(9);
+        int TIMES = 300;
+        CountDownLatch c = new CountDownLatch(TIMES * 3);
 
         Flux<Payload> send = Flux.<Payload>create(emitter -> {
-            for (int i = 1; i <= 3; i++) {
+            for (int i = 1; i <= TIMES; i++) {
                 List<String> ids = HelloUtils.getRandomIds(3);
                 Payload payload = DefaultPayload.create(JSON.toJSONString(new HelloRequests(ids)));
                 emitter.next(payload);

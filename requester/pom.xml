@@ -19,13 +19,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-rsocket</artifactId>
-            <version>${spring-boot-starter.version}</version>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>${spring-boot-starter.version}</version>
+            <version>${spring-boot.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
+            <version>${reactor-netty.version}</version>
+        </dependency>
+
+        <!--provided-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -33,9 +40,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <spring-boot-starter.version>2.2.1.RELEASE</spring-boot-starter.version>
-    </properties>
 
     <build>
         <finalName>requester</finalName>

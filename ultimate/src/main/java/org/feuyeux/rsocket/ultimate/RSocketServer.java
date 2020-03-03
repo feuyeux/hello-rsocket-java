@@ -1,4 +1,4 @@
-package org.feuyeux.rsocket;
+package org.feuyeux.rsocket.ultimate;
 
 import io.rsocket.ConnectionSetupPayload;
 import io.rsocket.RSocket;
@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.ultimate.HelloRSocket;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 @Slf4j
 public class RSocketServer {
     public static final String HOST = "localhost";
@@ -20,6 +22,8 @@ public class RSocketServer {
         WebsocketServerTransport wsTransport = WebsocketServerTransport.create(HOST, PORT);
 
         RSocketFactory.receive()
+                .resume()
+                .resumeSessionDuration(Duration.ofSeconds(60))
                 .acceptor(new HelloSocketAcceptor())
                 .transport(tcpTransport)
                 .start()
