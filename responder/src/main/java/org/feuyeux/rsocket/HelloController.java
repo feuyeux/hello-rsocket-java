@@ -1,5 +1,10 @@
 package org.feuyeux.rsocket;
 
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.rsocket.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
@@ -10,11 +15,6 @@ import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author feuyeux@gmail.com
@@ -38,8 +38,7 @@ public class HelloController {
     }
 
     /**
-     * REQUEST_FNF
-     * -->!
+     * REQUEST_FNF -->!
      *
      * @param helloRequest fnf
      * @return void
@@ -51,8 +50,7 @@ public class HelloController {
     }
 
     /**
-     * REQUEST_RESPONSE
-     * request --> <-- response
+     * REQUEST_RESPONSE request --> <-- response
      *
      * @param helloRequest hello request
      * @return hello response
@@ -64,9 +62,13 @@ public class HelloController {
         return Mono.just(getHello(id));
     }
 
+    //@MessageMapping("hello-response2")
+    //void requestAndResponse2(@AuthenticationPrincipal Mono<UserDetails> user) {
+    //    user.map(UserDetails::getUsername);
+    //}
+
     /**
-     * REQUEST_STREAM
-     * request --> <-- <-- stream
+     * REQUEST_STREAM request --> <-- <-- stream
      *
      * @param helloRequests hello requests
      * @return hello response flux
@@ -76,13 +78,12 @@ public class HelloController {
         log.info(">> [Request-Stream] data:{}", helloRequests);
         List<String> ids = helloRequests.getIds();
         return Flux.fromIterable(ids)
-                .delayElements(Duration.ofMillis(500))
-                .map(this::getHello);
+            .delayElements(Duration.ofMillis(500))
+            .map(this::getHello);
     }
 
     /**
-     * REQUEST_CHANNEL
-     * request channel --> --> <-- --> <--
+     * REQUEST_CHANNEL request channel --> --> <-- --> <--
      *
      * @param requests hello request flux
      * @return hello response flux
@@ -90,10 +91,10 @@ public class HelloController {
     @MessageMapping("hello-channel")
     Flux<List<HelloResponse>> requestChannel(Flux<HelloRequests> requests) {
         return Flux.from(requests)
-                .doOnNext(message -> log.info(">> [Request-Channel] data:{}", message))
-                .map(message -> message.getIds().stream()
-                        .map(this::getHello)
-                        .collect(Collectors.toList()));
+            .doOnNext(message -> log.info(">> [Request-Channel] data:{}", message))
+            .map(message -> message.getIds().stream()
+                .map(this::getHello)
+                .collect(Collectors.toList()));
     }
 
     private HelloResponse getHello(String id) {

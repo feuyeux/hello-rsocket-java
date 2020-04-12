@@ -1,5 +1,9 @@
 package org.feuyeux.reactor;
 
+import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -9,10 +13,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.ParallelFlux;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
-
-import java.time.Duration;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class TestReactorApi {
@@ -56,51 +56,51 @@ public class TestReactorApi {
         Flux<String> publisher = Flux.fromArray(letters);
 
         Flux<String> flux1 = publisher
-                .publishOn(Schedulers.newParallel("X"))
-                .filter(s -> {
-                    log.debug("filter {}", s);
-                    return !s.trim().isEmpty();
-                })
-                .map(s -> {
-                    log.debug("map {}", s);
-                    return s.toLowerCase();
-                })
-                .distinct()
-                .sort();
+            .publishOn(Schedulers.newParallel("X"))
+            .filter(s -> {
+                log.debug("filter {}", s);
+                return !s.trim().isEmpty();
+            })
+            .map(s -> {
+                log.debug("map {}", s);
+                return s.toLowerCase();
+            })
+            .distinct()
+            .sort();
 
         ParallelFlux<String> flux2 = publisher
-                .filter(s -> {
-                    log.debug("filter {}", s);
-                    return !s.trim().isEmpty();
-                })
-                .map(s -> {
-                    log.debug("map {}", s);
-                    return s.toUpperCase();
-                })
-                .distinct()
-                .sort()
-                .publishOn(Schedulers.newParallel("Y"))
-                .parallel(2);
+            .filter(s -> {
+                log.debug("filter {}", s);
+                return !s.trim().isEmpty();
+            })
+            .map(s -> {
+                log.debug("map {}", s);
+                return s.toUpperCase();
+            })
+            .distinct()
+            .sort()
+            .publishOn(Schedulers.newParallel("Y"))
+            .parallel(2);
 
         CountDownLatch latch = new CountDownLatch(1);
         LettersSubscriber subscriber = new LettersSubscriber(latch);
 
         Flux<String> flux3 = flux1.publishOn(Schedulers.newParallel("Z"))
-                .zipWith(flux2, (s1, s2) -> {
-                    log.debug("zipWith: {},{}", s1, s2);
-                    return String.format("%s[%d] %s[%d]",
-                            s2, (int) s2.charAt(0), s1, (int) s1.charAt(0));
-                })
-                .limitRate(2)
-                .publishOn(Schedulers.newParallel("R"));
+            .zipWith(flux2, (s1, s2) -> {
+                log.debug("zipWith: {},{}", s1, s2);
+                return String.format("%s[%d] %s[%d]",
+                    s2, (int)s2.charAt(0), s1, (int)s1.charAt(0));
+            })
+            .limitRate(2)
+            .publishOn(Schedulers.newParallel("R"));
         flux3.subscribe(subscriber);
 
         latch.await();
 
         StepVerifier.create(flux3)
-                .expectNext("A[65] a[97]")
-                .thenCancel()
-                .verify();
+            .expectNext("A[65] a[97]")
+            .thenCancel()
+            .verify();
     }
 
     @Test
@@ -109,17 +109,17 @@ public class TestReactorApi {
         Flux<String> f2 = Flux.just("A", "B", "C");
         Flux<String> f3 = Flux.just("x", "y", "z");
         Flux<String> combineLatestFlux = Flux.combineLatest(
-                f1,
-                f2,
-                f3,
-                (arr) -> String.valueOf(arr[1]) + arr[2] + arr[0]);
+            f1,
+            f2,
+            f3,
+            (arr) -> String.valueOf(arr[1]) + arr[2] + arr[0]);
 
         StepVerifier.create(combineLatestFlux)
-                .expectNext("Cx3")
-                .expectNext("Cy3")
-                .expectNext("Cz3")
-                .expectComplete()
-                .verify();
+            .expectNext("Cx3")
+            .expectNext("Cy3")
+            .expectNext("Cz3")
+            .expectComplete()
+            .verify();
         combineLatestFlux.subscribe(log::info);
     }
 
@@ -156,8 +156,8 @@ public class TestReactorApi {
         publisher.filter(i -> i % 2 == 0).subscribe(subscriber);
 
         publisher.filter(i -> 2004 <= i && i <= 2020)
-                .zipWith(Flux.range(1, 100), (year, serial) -> String.format("%d.%d", serial, year))
-                .subscribe(s -> log.info("{}", s));
+            .zipWith(Flux.range(1, 100), (year, serial) -> String.format("%d.%d", serial, year))
+            .subscribe(s -> log.info("{}", s));
 
         publisher.filter(i -> i >= (2030 - 5)).subscribe(subscriber);
         latch.await();
@@ -168,29 +168,29 @@ public class TestReactorApi {
         CountDownLatch latch = new CountDownLatch(1);
         Flux<Integer> publisher = Flux.range(2004, 20).delayElements(Duration.ofMillis(200));
         publisher.filter(i -> i % 2 == 0)
-                .subscribe(new Subscriber<Integer>() {
-                    @Override
-                    public void onSubscribe(Subscription s) {
-                        log.info("onSubscribe, request(n)=Long.MAX_VALUE");
-                        s.request(Long.MAX_VALUE);
-                    }
+            .subscribe(new Subscriber<Integer>() {
+                @Override
+                public void onSubscribe(Subscription s) {
+                    log.info("onSubscribe, request(n)=Long.MAX_VALUE");
+                    s.request(Long.MAX_VALUE);
+                }
 
-                    @Override
-                    public void onNext(Integer i) {
-                        log.info("handle {}", i);
-                    }
+                @Override
+                public void onNext(Integer i) {
+                    log.info("handle {}", i);
+                }
 
-                    @Override
-                    public void onError(Throwable t) {
-                        log.error("", t);
-                    }
+                @Override
+                public void onError(Throwable t) {
+                    log.error("", t);
+                }
 
-                    @Override
-                    public void onComplete() {
-                        log.info("complete");
-                        latch.countDown();
-                    }
-                });
+                @Override
+                public void onComplete() {
+                    log.info("complete");
+                    latch.countDown();
+                }
+            });
         latch.await();
     }
 }

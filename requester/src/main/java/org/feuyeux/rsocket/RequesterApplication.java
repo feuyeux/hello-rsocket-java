@@ -31,20 +31,20 @@ public class RequesterApplication {
     @Bean
     public RSocket rSocket() {
         return RSocketFactory.connect()
-                .metadataMimeType(metadataMimeTypeValue)
-                .dataMimeType(dataMimeTypeValue)
-                .frameDecoder(PayloadDecoder.ZERO_COPY)
-                .fragment(1024)
-                .transport(TcpClientTransport.create(7878))
-                .start().block();
+            .metadataMimeType(metadataMimeTypeValue)
+            .dataMimeType(dataMimeTypeValue)
+            .frameDecoder(PayloadDecoder.ZERO_COPY)
+            .fragment(1024)
+            .transport(TcpClientTransport.create(7878))
+            .start().block();
     }
 
     @Bean
     public RSocketRequester rSocketRequester(RSocketStrategies strategies) {
         return RSocketRequester.wrap(rSocket(),
-                dataMimeType,
-                metadataMimeType,
-                strategies);
+            dataMimeType,
+            metadataMimeType,
+            strategies);
     }
 }
 

@@ -1,6 +1,11 @@
 package org.feuyeux.rsocket.ultimate;
 
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+
 import com.alibaba.fastjson.JSON;
+
 import io.rsocket.AbstractRSocket;
 import io.rsocket.Payload;
 import io.rsocket.util.DefaultPayload;
@@ -13,10 +18,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
-
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 public class HelloRSocket extends AbstractRSocket {
@@ -56,11 +57,11 @@ public class HelloRSocket extends AbstractRSocket {
         log.info(">> [Request-Stream] data:{}", helloRequests);
         List<String> ids = helloRequests.getIds();
         return Flux.fromIterable(ids)
-                .delayElements(Duration.ofMillis(500))
-                .map(id -> {
-                    HelloResponse helloResponse = getHello(id);
-                    return DefaultPayload.create(JSON.toJSONString(helloResponse));
-                });
+            .delayElements(Duration.ofMillis(500))
+            .map(id -> {
+                HelloResponse helloResponse = getHello(id);
+                return DefaultPayload.create(JSON.toJSONString(helloResponse));
+            });
     }
 
     @Override
@@ -68,19 +69,19 @@ public class HelloRSocket extends AbstractRSocket {
         final Scheduler scheduler = Schedulers.parallel();
 
         return Flux.from(payloads)
-                .doOnNext(payload -> {
-                    log.info(">> [Request-Channel] data:{}", payload.getDataUtf8());
-                })
-                .map(payload -> {
-                    HelloRequests helloRequests = JSON.parseObject(payload.getDataUtf8(), HelloRequests.class);
-                    return helloRequests.getIds();
-                })
-                .flatMap(HelloRSocket::apply)
-                .map(id -> {
-                    HelloResponse helloResponse = getHello(id);
-                    return DefaultPayload.create(JSON.toJSONString(helloResponse));
-                })
-                .subscribeOn(scheduler);
+            .doOnNext(payload -> {
+                log.info(">> [Request-Channel] data:{}", payload.getDataUtf8());
+            })
+            .map(payload -> {
+                HelloRequests helloRequests = JSON.parseObject(payload.getDataUtf8(), HelloRequests.class);
+                return helloRequests.getIds();
+            })
+            .flatMap(HelloRSocket::apply)
+            .map(id -> {
+                HelloResponse helloResponse = getHello(id);
+                return DefaultPayload.create(JSON.toJSONString(helloResponse));
+            })
+            .subscribeOn(scheduler);
     }
 
     private HelloResponse getHello(String id) {

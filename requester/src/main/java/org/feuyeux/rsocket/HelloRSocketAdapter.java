@@ -1,5 +1,7 @@
 package org.feuyeux.rsocket;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
@@ -11,8 +13,6 @@ import org.springframework.util.MimeType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 /**
  * @author feuyeux@gmail.com
  */
@@ -20,6 +20,10 @@ import java.util.List;
 @Component
 public class HelloRSocketAdapter {
     private final RSocketRequester rSocketRequester;
+
+    //private final MimeType mimeType = MimeTypeUtils.parseMimeType(WellKnownMimeType.MESSAGE_RSOCKET_AUTHENTICATION
+    // .getString());
+    //private final UsernamePasswordMetadata credentials = new UsernamePasswordMetadata("jlong", "pw");
 
     public HelloRSocketAdapter(RSocketRequester rSocketRequester) {
         this.rSocketRequester = rSocketRequester;
@@ -40,68 +44,65 @@ public class HelloRSocketAdapter {
     }
 
     /**
-     * REQUEST_FNF
-     * -->!
+     * REQUEST_FNF -->!
      *
      * @param id hello id
      * @return void
      */
     public Mono<Void> fireAndForget(String id) {
         return rSocketRequester
-                .route("hello-forget")
-                .data(new HelloRequest(id))
-                .send();
+            .route("hello-forget")
+            .data(new HelloRequest(id))
+            .send();
     }
 
     /**
-     * REQUEST_RESPONSE
-     * request --> <-- response
+     * REQUEST_RESPONSE request --> <-- response
      *
      * @param id hello id
      * @return hello response
      */
     public Mono<HelloResponse> getHello(String id) {
         return rSocketRequester
-                .route("hello-response")
-                .data(new HelloRequest(id))
-                .retrieveMono(HelloResponse.class)
-                .doOnNext(response -> log.info("<< [Request-Response] response id:{},value:{}",
-                        response.getId(), response.getValue()));
+            .route("hello-response")
+            //.metadata(this.credentials, this.mimeType)
+            .data(new HelloRequest(id))
+            .retrieveMono(HelloResponse.class)
+            .doOnNext(response -> log.info("<< [Request-Response] response id:{},value:{}",
+                response.getId(), response.getValue()));
     }
 
     /**
-     * REQUEST_STREAM
-     * request --> <-- <-- stream
+     * REQUEST_STREAM request --> <-- <-- stream
      *
      * @param ids hello id[]
      * @return hello response flux
      */
     public Flux<HelloResponse> getHellos(List<String> ids) {
         return rSocketRequester
-                .route("hello-stream")
-                .data(new HelloRequests(ids))
-                .retrieveFlux(HelloResponse.class)
-                .doOnNext(response -> log.info("<< [Request-Stream] response id:{},value:{}",
-                        response.getId(), response.getValue()));
+            .route("hello-stream")
+            .data(new HelloRequests(ids))
+            .retrieveFlux(HelloResponse.class)
+            .doOnNext(response -> log.info("<< [Request-Stream] response id:{},value:{}",
+                response.getId(), response.getValue()));
     }
 
     /**
-     * REQUEST_CHANNEL
-     * request channel --> --> <-- --> <--
+     * REQUEST_CHANNEL request channel --> --> <-- --> <--
      *
      * @param helloRequestFlux hello request flux
      * @return hello response flux
      */
     public Flux<List<HelloResponse>> getHelloChannel(Flux<HelloRequests> helloRequestFlux) {
         return rSocketRequester
-                .route("hello-channel")
-                .data(helloRequestFlux, HelloRequest.class)
-                .retrieveFlux(new ParameterizedTypeReference<List<HelloResponse>>() {
-                }).limitRequest(2)
-                .doOnNext(responses -> responses.forEach(
-                        response -> log.info("<< [Request-Channel] response id:{},value:{}",
-                                response.getId(), response.getValue()
-                        )
-                ));
+            .route("hello-channel")
+            .data(helloRequestFlux, HelloRequest.class)
+            .retrieveFlux(new ParameterizedTypeReference<List<HelloResponse>>() {
+            }).limitRequest(2)
+            .doOnNext(responses -> responses.forEach(
+                response -> log.info("<< [Request-Channel] response id:{},value:{}",
+                    response.getId(), response.getValue()
+                )
+            ));
     }
 }

@@ -1,6 +1,12 @@
 package org.feuyeux.rsocket.ultimate;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+
 import com.alibaba.fastjson.JSON;
+
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.RSocketFactory;
@@ -14,11 +20,6 @@ import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.feuyeux.rsocket.utils.HelloUtils;
 import reactor.core.publisher.Flux;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 public class RSocketClient {
@@ -42,21 +43,21 @@ public class RSocketClient {
         WebsocketClientTransport wsTransport = WebsocketClientTransport.create(HOST, PORT);
 
         return RSocketFactory.connect()
-                .errorConsumer(throwable -> {
-                    if (throwable instanceof RejectedResumeException) {
-                        init();
-                    }
-                })
-                .resume()
-                .resumeSessionDuration(Duration.ofSeconds(60))
-                .transport(tcpTransport)
-                .start()
-                .block();
+            .errorConsumer(throwable -> {
+                if (throwable instanceof RejectedResumeException) {
+                    init();
+                }
+            })
+            .resume()
+            .resumeSessionDuration(Duration.ofSeconds(60))
+            .transport(tcpTransport)
+            .start()
+            .block();
     }
 
     public static void execMetaPush(RSocket socket) {
         log.info("====ExecMetaPush====");
-        Payload payload = DefaultPayload.create(new byte[]{}, "JAVA".getBytes());
+        Payload payload = DefaultPayload.create(new byte[] {}, "JAVA".getBytes());
         socket.metadataPush(payload).block();
     }
 
@@ -73,15 +74,15 @@ public class RSocketClient {
         Payload payload = DefaultPayload.create(JSON.toJSONString(helloRequest));
         CountDownLatch c = new CountDownLatch(1);
         socket.requestResponse(payload)
-                .doOnError(e -> {
-                    log.error("", e);
-                    c.countDown();
-                })
-                .subscribe(p -> {
-                    HelloResponse response = JSON.parseObject(p.getDataUtf8(), HelloResponse.class);
-                    log.info("<< [Request-Response] response id:{},value:{}", response.getId(), response.getValue());
-                    c.countDown();
-                });
+            .doOnError(e -> {
+                log.error("", e);
+                c.countDown();
+            })
+            .subscribe(p -> {
+                HelloResponse response = JSON.parseObject(p.getDataUtf8(), HelloResponse.class);
+                log.info("<< [Request-Response] response id:{},value:{}", response.getId(), response.getValue());
+                c.countDown();
+            });
         c.await();
     }
 
