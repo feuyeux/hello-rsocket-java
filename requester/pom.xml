@@ -61,7 +61,7 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
-        <!--security
+        <!--security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -76,7 +76,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-rsocket</artifactId>
             <version>${spring-security.version}</version>
-        </dependency>-->
+        </dependency>
 
         <!--provided-->
         <dependency>
