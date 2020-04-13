@@ -56,7 +56,7 @@ public class RequesterApplication {
                 .retrieveFlux(new ParameterizedTypeReference<List<HelloResponse>>() {
                 })
                 .subscribe(rs -> rs.forEach(r ->
-                        log.info("<< [Request-Channel] r id:{},value:{}", r.getId(), r.getValue()
+                        log.info("<< [Request-Channel] id:{},value:{}", r.getId(), r.getValue()
                         )
                 ));
     }

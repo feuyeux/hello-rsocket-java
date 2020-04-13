@@ -26,7 +26,7 @@
 
 cli
 ```bash
-curl http://localhost:8080/hello-forget
+curl http://localhost:8989/api/hello-forget
 ```
 
 responder
@@ -39,7 +39,7 @@ responder
 cli
 
 ```bash
-▶ curl http://localhost:8080/hello/1
+▶ curl http://localhost:8989/api/hello/1
 {"id":"1","value":"Bonjour"}
 ```
 
@@ -58,7 +58,7 @@ requester
 cli
 
 ```bash
-curl http://localhost:8080/hello-stream
+curl http://localhost:8989/api/hello-stream
 data:{"id":"3","value":"こんにちは"}
 
 data:{"id":"4","value":"Ciao"}
@@ -89,7 +89,7 @@ requester
 cli
 
 ```bash
-▶ curl http://localhost:8080/hello-channel
+▶ curl http://localhost:8989/api/hello-channel
 data:[{"id":"4","value":"Ciao"},{"id":"4","value":"Ciao"},{"id":"2","value":"Hola"}]
 
 data:[{"id":"4","value":"Ciao"},{"id":"3","value":"こんにちは"},{"id":"0","value":"Hello"}]

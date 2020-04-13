@@ -20,6 +20,7 @@ import java.util.List;
 @Component
 public class HelloRSocketAdapter {
     private final RSocketRequester rSocketRequester;
+
     public HelloRSocketAdapter(RSocketRequester rSocketRequester) {
         this.rSocketRequester = rSocketRequester;
     }
