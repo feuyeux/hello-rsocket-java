@@ -1,5 +1,10 @@
 package org.feuyeux.rsocket;
 
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.Unpooled;
+import io.rsocket.metadata.CompositeMetadataFlyweight;
+import io.rsocket.util.ByteBufPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
@@ -7,7 +12,6 @@ import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MimeType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,24 +23,23 @@ import java.util.List;
 @Slf4j
 @Component
 public class HelloRSocketAdapter {
+    public static final String MESSAGE_X_ORG_FEUYEUX_RSOCKET_META = "message/x.org.feuyeux.rsocket.meta";
     private final RSocketRequester rSocketRequester;
 
     public HelloRSocketAdapter(RSocketRequester rSocketRequester) {
         this.rSocketRequester = rSocketRequester;
     }
 
-    /**
-     * TODO METADATA_PUSH
-     *
-     * @param securityToken todo
-     * @param mimeType      todo
-     * @return void
-     */
-    public Mono<Void> metaData(String securityToken, MimeType mimeType) {
-        //return rSocketRequester
-        //    .route("hello-metadata")
-        //    .metadata(securityToken, mimeType).?
-        return Mono.empty();
+    public void metaData(String metaMessage) {
+        CompositeByteBuf metadataByteBuf = ByteBufAllocator.DEFAULT.compositeBuffer();
+        CompositeMetadataFlyweight.encodeAndAddMetadata(
+                metadataByteBuf,
+                ByteBufAllocator.DEFAULT,
+                MESSAGE_X_ORG_FEUYEUX_RSOCKET_META,
+                ByteBufAllocator.DEFAULT.buffer().writeBytes(metaMessage.getBytes()));
+        rSocketRequester.rsocket()
+                .metadataPush(ByteBufPayload.create(Unpooled.EMPTY_BUFFER, metadataByteBuf))
+                .block();
     }
 
     /**

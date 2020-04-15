@@ -1,12 +1,10 @@
 package org.feuyeux.rsocket;
 
-import io.rsocket.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
 import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,20 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 public class HelloController {
-
     private final List<String> HELLO_LIST = Arrays.asList("Hello", "Bonjour", "Hola", "こんにちは", "Ciao", "안녕하세요");
-
-    /**
-     * TODO METADATA_PUSH
-     *
-     * @return void
-     */
-
-    @ConnectMapping("hello-metadata")
-    public Mono<Void> metadataPush(Payload payload) {
-        log.info(">> [MetadataPush]:{}", payload);
-        return Mono.empty();
-    }
 
     /**
      * REQUEST_FNF -->!
@@ -61,11 +46,6 @@ public class HelloController {
         String id = helloRequest.getId();
         return Mono.just(getHello(id));
     }
-
-    //@MessageMapping("hello-response2")
-    //void requestAndResponse2(@AuthenticationPrincipal Mono<UserDetails> user) {
-    //    user.map(UserDetails::getUsername);
-    //}
 
     /**
      * REQUEST_STREAM request --> <-- <-- stream

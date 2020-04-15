@@ -6,7 +6,6 @@ import org.feuyeux.rsocket.pojo.HelloResponse;
 import org.feuyeux.rsocket.utils.HelloUtils;
 import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
-import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +29,8 @@ public class HelloController {
     }
 
     @GetMapping("hello-metadata")
-    Mono<Void> metaData() {
-        MimeType mimeType = MimeType.valueOf("message/x.rsocket.authentication.bearer.v0");
-        String securityToken = "...";
-        return helloRSocketAdapter.metaData(securityToken, mimeType);
+    void metaData() {
+        helloRSocketAdapter.metaData("hello");
     }
 
     @GetMapping("hello-forget")
