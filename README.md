@@ -118,3 +118,6 @@ requester
 << [Request-Channel] response id:0,value:Hello
 << [Request-Channel] response id:2,value:Hola
 ```
+
+### more
+- rsocket security: https://github.com/feuyeux/hello-rsocket-security-java

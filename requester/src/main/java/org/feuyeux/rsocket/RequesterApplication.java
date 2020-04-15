@@ -1,6 +1,5 @@
 package org.feuyeux.rsocket;
 
-import io.rsocket.metadata.WellKnownMimeType;
 import lombok.extern.slf4j.Slf4j;
 import org.feuyeux.rsocket.pojo.HelloRequest;
 import org.feuyeux.rsocket.pojo.HelloRequests;
@@ -13,9 +12,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.messaging.rsocket.RSocketRequester;
-import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata;
-import org.springframework.util.MimeType;
-import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -26,9 +22,6 @@ import java.util.List;
 @Slf4j
 @SpringBootApplication
 public class RequesterApplication {
-    private static final WellKnownMimeType AUTHENTICATION = WellKnownMimeType.MESSAGE_RSOCKET_AUTHENTICATION;
-    private final MimeType mimeType = MimeTypeUtils.parseMimeType(AUTHENTICATION.getString());
-    private final UsernamePasswordMetadata credentials = new UsernamePasswordMetadata("user", "pw");
 
     public static void main(String[] args) {
         SpringApplication.run(RequesterApplication.class);
@@ -38,7 +31,6 @@ public class RequesterApplication {
     @Bean
     RSocketRequester rSocketRequester(RSocketRequester.Builder builder) {
         return builder
-                .setupMetadata(this.credentials, this.mimeType)
                 .connectTcp("localhost", 7878)
                 .block();
     }
