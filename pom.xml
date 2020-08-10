@@ -16,12 +16,12 @@
         <module>ultimate</module>
     </modules>
     <properties>
-        <spring-boot.version>2.3.0.M4</spring-boot.version>
-        <spring.version>5.2.5.RELEASE</spring.version>
-        <rsocket.version>1.0.0-RC6</rsocket.version>
-        <reactor-netty.version>0.9.5.RELEASE</reactor-netty.version>
-        <netty.version>4.1.45.Final</netty.version>
-        <reactor-core.version>3.3.3.RELEASE</reactor-core.version>
+        <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+        <spring.version>5.2.8.RELEASE</spring.version>
+        <rsocket.version>1.0.1</rsocket.version>
+        <reactor-netty.version>0.9.8.RELEASE</reactor-netty.version>
+        <netty.version>4.1.50.Final</netty.version>
+        <reactor-core.version>3.3.6.RELEASE</reactor-core.version>
         <fastjson.version>1.2.68</fastjson.version>
     </properties>
 </project>
